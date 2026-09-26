@@ -6,7 +6,7 @@
   var SITE = {
     whatsapp: "9609899981",
     // Opening hours in minutes from midnight, Maldives time (UTC+5). 0 = Sunday.
-    hours: { 0: [720, 1380], 1: [720, 1380], 2: [720, 1380], 3: [720, 1380], 4: [720, 1380], 5: [840, 1380], 6: [720, 1380] }
+    hours: { 0: [720, 1380], 1: [720, 1380], 2: [720, 1380], 3: [720, 1380], 4: [720, 1380], 5: [720, 1380], 6: [720, 1380] }
   };
   var DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   function fmt(m) { var h = Math.floor(m / 60), mm = m % 60, ap = h >= 12 ? "pm" : "am", h12 = h % 12 || 12; return h12 + (mm ? ":" + String(mm).padStart(2, "0") : "") + ap; }
@@ -24,6 +24,28 @@
     b.addEventListener("click", function () { body.classList.remove("nav-open"); document.querySelectorAll("[data-nav-open]").forEach(function (o) { o.setAttribute("aria-expanded", "false"); }); });
   });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && body.classList.contains("nav-open")) document.querySelector("[data-nav-close]").click(); });
+
+
+  // Single-page build: show one [data-page] section at a time, driven by the #hash.
+  var pages = document.querySelectorAll("[data-page]");
+  if (pages.length) {
+    function route() {
+      var h = (location.hash || "#home").slice(1), target = null, page = document.querySelector('[data-page="' + h + '"]');
+      if (!page) { target = document.getElementById(h); page = target ? target.closest("[data-page]") : null; }
+      if (!page) page = pages[0];
+      var name = page.getAttribute("data-page");
+      pages.forEach(function (p) { p.hidden = p !== page; });
+      document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        if (a.closest("[data-page]")) return;
+        if (a.getAttribute("href") === "#" + name) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+      });
+      body.classList.remove("nav-open");
+      var t = page.getAttribute("data-title"); if (t) document.title = t;
+      if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
+    }
+    window.addEventListener("hashchange", route);
+    route();
+  }
 
   // Hero slideshow with arrows and pause (as on the reference site)
   document.querySelectorAll(".hero").forEach(function (hero) {
@@ -154,9 +176,12 @@
       if (data.note) lines.push("Note: " + data.note);
       var url = "https://wa.me/" + SITE.whatsapp + "?text=" + encodeURIComponent(lines.join("\n"));
       var ok = form.querySelector(".ok");
-      ok.innerHTML = 'WhatsApp is opening with your message ready to send. If it doesn\'t open, <a href="' + url + '" target="_blank" rel="noopener">tap here</a>.';
+      ok.innerHTML = "Your message is ready. Tap the button to send it to us on WhatsApp.";
+      var send = document.createElement("a");
+      send.className = "btn btn-fill"; send.href = url; send.target = "_blank"; send.rel = "noopener"; send.textContent = "Send on WhatsApp";
+      var wrap = document.createElement("div"); wrap.className = "btn-row"; wrap.appendChild(send); ok.appendChild(wrap);
       ok.hidden = false;
-      window.open(url, "_blank", "noopener");
+      send.focus();
     });
   });
 })();

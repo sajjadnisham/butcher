@@ -19,12 +19,14 @@ Open `index.html` in a browser, or host the folder on any static host (GitHub Pa
 
 ## Editing
 - **Hours and WhatsApp number:** `SITE` at the top of `assets/js/main.js`. Hours text also appears on `hours-location.html` and in the home page copy.
-- **Menu:** `menu.html`. Prices are not shown. To add one, put ` · <span class="price">MVR 450</span>` inside the item's `<h3>`.
+- **Menu:** `menu.html`. Prices are average prices in MVR and sit in each item's `<span class="price">`.
 - **Photos:** `assets/images/`. Replace a file with one of the same name, or add a new one and reference it.
 
-Forms have no server: they compose a WhatsApp message to +960 989 9981.
+Forms have no server: they compose a WhatsApp message to +960 989 9981, then show a "Send on WhatsApp" button.
+
+Photos are placeholders from the owner and will be replaced later.
 
 ## Still to confirm with the owner
-- Prices, and the side dishes, starters and mains (taken from photos, not a printed menu).
-- Friday opening time (2pm, from the brief; Instagram says 12 noon daily).
+- Menu prices: these are average estimates, not the restaurant's price list.
+- The side dishes, starters and mains, which were taken from photos, not a printed menu.
 - "Cash only" and "Outdoor seating" (from the Google listing).
